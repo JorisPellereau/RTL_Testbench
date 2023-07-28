@@ -1,0 +1,5 @@
+UART TB :
+
+Ajouter clock séparer pour chaqune vecteur d'instance
+
+Test avec d'autre généric TBD
