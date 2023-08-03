@@ -11,7 +11,24 @@ L'idée de ce testbench est de profiter des fonctions objets du SystemVerilog ai
 *  Réutilisable
 *  Générique
 
+Folder Organization
+-------------------
+.. Folder Organization
+.. graphviz::
+   
+    graph folder_orga {
+       "RTL_Testbench" [shape=folder];
+       "sources"       [shape=folder];
+       "scripts"       [shape=folder];
+       "docs"          [shape=folder];
+       "sphinx_docs"   [shape=folder]
+       "RTL_Testbench" -- "sources";
+       "RTL_Testbench" -- "scripts";
+       "RTL_Testbench" -- "docs";
+       "docs"          -- "sphinx_docs"
+       }
 
+       
 Architecture
 ------------
 
