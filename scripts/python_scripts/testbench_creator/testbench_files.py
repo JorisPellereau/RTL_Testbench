@@ -87,8 +87,7 @@ endmodule // clk_gen"""
 
 
 include_testbench_setup_str = "`include \"{0}/testbench_setup.sv\"\n"
-include_sequencer_str       = "`include \"/home/linux-jp/Documents/GitHub/Verilog/Testbench/sources/lib_tb_sequencer/tb_tasks.sv\"\n"
-
+include_sequencer_str       = "`include \"~/Documents/GitHub/RTL_Testbench/sources/lib_tb_sequencer/tb_tasks.sv\"\n"
 
 tb_top_str = """
 
@@ -125,64 +124,55 @@ module tb_top
    // ==================
 
 
-   // == TESTBENCH GENERIC INTERFACE SIGNALS DECLARATIONS ==
-   wait_event_intf #( .WAIT_SIZE   (`C_WAIT_ALIAS_NB),
-                      .WAIT_WIDTH  (`C_WAIT_WIDTH)
-		      ) 
-   s_wait_event_if();
-   
-   set_injector_intf #( .SET_SIZE   (`C_SET_ALIAS_NB),
-			.SET_WIDTH  (`C_SET_WIDTH)
-			)
-   s_set_injector_if();
-   
-   wait_duration_intf s_wait_duration_if();
-   
-   assign s_wait_duration_if.clk = clk;
-   
-
-   check_level_intf #( .CHECK_SIZE   (`C_CHECK_ALIAS_NB),
-		       .CHECK_WIDTH  (`C_CHECK_WIDTH)
-		       )
-   s_check_level_if();
-   // ======================================================
-
    // == HDL GENERIC TESTBENCH MODULES ==
 
-   // WAIT EVENT TB WRAPPER INST
-   wait_event_wrapper #(.CLK_PERIOD (`C_TB_CLK_PERIOD)
-			)
-   i_wait_event_wrapper (
-			 .clk            (clk),
-			 .rst_n          (rst_n),
-			 .wait_event_if  (s_wait_event_if)			 
-			 );
-   
-   
-   // SET INJECTOR TB WRAPPER INST
-   set_injector_wrapper #()
-   i_set_injector_wrapper (
-			   .clk              (clk),
-			   .rst_n            (rst_n),
-			   .set_injector_if  (s_set_injector_if)			   
-			   );
+   // -- WAIT EVENT TB INST
+   wait_event #(.CLK_PERIOD (`C_TB_CLK_PERIOD),
+		.WAIT_SIZE  (`C_WAIT_ALIAS_NB),
+		.WAIT_WIDTH (`C_WAIT_WIDTH)
+		)
+   i_wait_event_0 (
+		   .clk   (clk),
+		   .rst_n (rst_n)  
+		   );
+
+   // -- SET INJECTOR TB INST
+   set_injector #(.SET_SIZE  (`C_SET_ALIAS_NB),
+		  .SET_WIDTH (`C_SET_WIDTH)
+   )
+   i_set_injector_0 (
+		     .clk   (clk),
+		     .rst_n (rst_n)
+   );
+
+   // -- WAIT DURATION Module
+   wait_duration i_wait_duration_0 ();
+
+   // -- CHECK LEVEL Module
+   check_level #( .CHECK_SIZE   (`C_CHECK_ALIAS_NB),
+		  .CHECK_WIDTH  (`C_CHECK_WIDTH)
+		  )
+   i_check_level_0 ();
+
    // =====================================================
 
    // == TESTBENCH SIGNALS AFFECTATION ==
 
    // SET WAIT EVENT SIGNALS
-   assign s_wait_event_if.wait_signals[0] = rst_n;
-   assign s_wait_event_if.wait_signals[1] = clk;
+   assign i_wait_event_0.wait_event_if.wait_signals[0] = rst_n;
+   assign i_wait_event_0.wait_event_if.wait_signals[1] = clk;
    
    // SET SET_INJECTOR SIGNALS
-   assign set_injector_0            = s_set_injector_if.set_signals_synch[0];
+   assign set_injector_0            = i_set_injector_0.set_injector_if.set_signals_synch[0];
   
    // SET SET_INJECTOR INITIAL VALUES
-   assign s_set_injector_if.set_signals_asynch_init_value[0]  = 0;
+   assign i_set_injector_0.set_injector_if.set_signals_asynch_init_value[0]  = 0;
   
    // SET CHECK_SIGNALS
-   assign s_check_level_if.check_signals[0] = check_level_0;
- 
+   assign i_check_level_0.check_level_if.check_signals[0] = check_level_0;
+
+   // WAIT DURATION Connection
+   assign i_wait_duration_0.wait_duration_if.clk = clk; // Assign Clock
    // =====================================================
 
    {1}
@@ -239,10 +229,10 @@ sequencer_class_str = """
 		      .G_DATA_COLLECTOR_WIDTH  (`C_DATA_COLLECTOR_DATA_WIDTH)*/
 		      )
    
-   tb_class_inst = new (s_wait_event_if, 
-			s_set_injector_if, 
-			s_wait_duration_if,
-			s_check_level_if);
+   tb_class_inst = new (i_wait_event_0.wait_event_if, 
+			i_set_injector_0.set_injector_if, 
+			i_wait_duration_0.wait_duration_if,
+			i_check_level_0.check_level_if);
 """
 
 
