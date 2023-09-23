@@ -11,17 +11,23 @@
 //`include "/home/jorisp/GitHub/Verilog/lib_tb_uart/tb_uart_class.sv"
 
 // == REGULAR TESTBENCH CLASS ==
-`include "/home/linux-jp/Documents/GitHub/Verilog/Testbench/sources/lib_tb_set_injector/tb_set_injector_class.sv"
-`include "/home/linux-jp/Documents/GitHub/Verilog/Testbench/sources/lib_tb_wait_event/tb_wait_event_class.sv"
-`include "/home/linux-jp/Documents/GitHub/Verilog/Testbench/sources/lib_tb_check_level/tb_check_level_class.sv"
-`include "/home/linux-jp/Documents/GitHub/Verilog/Testbench/sources/lib_tb_modelsim_cmd/tb_modelsim_cmd_class.sv"
+
+import pkg_tb::*;
+
+//`include "~/Documents/GitHub/RTL_Testbench/sourceslib_tb_set_injector/tb_set_injector_class.sv"
+/*`include "~/Documents/GitHub/RTL_Testbench/sourceslib_tb_wait_event/tb_wait_event_class.sv"
+`include "~/Documents/GitHub/RTL_Testbench/sourceslib_tb_check_level/tb_check_level_class.sv"
+`include "~/Documents/GitHub/RTL_Testbench/sourceslib_tb_modelsim_cmd/tb_modelsim_cmd_class.sv"
+ -----/\----- EXCLUDED -----/\----- */
 // =============================
 
 // == CUSTOM TESTBENCH CLASS ==
-`include "/home/linux-jp/Documents/GitHub/Verilog/Testbench/sources/lib_tb_uart/tb_uart_class.sv"
-`include "/home/linux-jp/Documents/GitHub/Verilog/Testbench/sources/lib_tb_data_collector/tb_data_collector_class.sv"
-`include "/home/linux-jp/Documents/GitHub/Verilog/Testbench/sources/lib_tb_data_checker/tb_data_checker_class.sv"
-`include "/home/linux-jp/Documents/GitHub/Verilog/Testbench/sources/lib_tb_axi4/tb_master_axi4lite_class.sv"
+/* -----\/----- EXCLUDED -----\/-----
+`include "~/Documents/GitHub/RTL_Testbench/sourceslib_tb_uart/tb_uart_class.sv"
+`include "~/Documents/GitHub/RTL_Testbench/sourceslib_tb_data_collector/tb_data_collector_class.sv"
+`include "~/Documents/GitHub/RTL_Testbench/sourceslib_tb_data_checker/tb_data_checker_class.sv"
+`include "~/Documents/GitHub/RTL_Testbench/sourceslib_tb_axi4/tb_master_axi4lite_class.sv"
+ -----/\----- EXCLUDED -----/\----- */
 // ============================
 
 class tb_modules_custom_class #(// == SET INJECTOR PARAMETERS ==

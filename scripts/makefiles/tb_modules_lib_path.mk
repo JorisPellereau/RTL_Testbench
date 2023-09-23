@@ -1,0 +1,10 @@
+TB_MODULES_LIB_PATH+=/RTL_Testbench/sources/lib_tb_utils
+TB_MODULES_LIB_PATH+=/RTL_Testbench/sources/lib_tb_set_injector
+TB_MODULES_LIB_PATH+=/RTL_Testbench/sources/lib_tb_wait_event
+TB_MODULES_LIB_PATH+=/RTL_Testbench/sources/lib_tb_check_level
+TB_MODULES_LIB_PATH+=/RTL_Testbench/sources/lib_tb_modelsim_cmd
+TB_MODULES_LIB_PATH+=/RTL_Testbench/sources/lib_tb_sequencer
+TB_MODULES_LIB_PATH+=/RTL_Testbench/sources/lib_tb_data_collector
+TB_MODULES_LIB_PATH+=/RTL_Testbench/sources/lib_tb_data_checker
+TB_MODULES_LIB_PATH+=/RTL_Testbench/sources/lib_tb_uart
+TB_MODULES_LIB_PATH+=/RTL_Testbench/sources/lib_tb_axi4

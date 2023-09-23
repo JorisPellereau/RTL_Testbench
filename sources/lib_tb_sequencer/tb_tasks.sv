@@ -9,7 +9,8 @@
 // Status          : Unknown, Use with caution!
 
 
-`include "/home/linux-jp/Documents/GitHub/Verilog/Testbench/sources/lib_tb_sequencer/tb_modules_custom_class.sv"
+//`include "/home/linux-jp/Documents/GitHub/RTL_Testbench/sources/lib_tb_sequencer/tb_modules_custom_class.sv"
+import pkg_tb::*;
 
 
 class tb_class #(

@@ -1,3 +1,6 @@
+# Testbench Package
+GEN_MODULE_LIST+=/RTL_Testbench/sources/lib_tb_package/pkg_tb.sv
+
 # Utiles
 GEN_MODULE_LIST+=/RTL_Testbench/sources/lib_tb_utils/tb_utils_class.sv
 

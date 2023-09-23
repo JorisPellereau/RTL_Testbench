@@ -8,7 +8,10 @@
 // Update Count    : 0
 // Status          : Unknown, Use with caution!
 
-`include "/home/linux-jp/Documents/GitHub/Verilog/Testbench/sources/lib_tb_utils/tb_utils_class.sv"
+//`include "~/Documents/GitHub/RTL_Testbench/sourceslib_tb_utils/tb_utils_class.sv"
+
+
+import pkg_tb::*;
 
 class tb_data_checker_class #(
 			      parameter G_NB_CHECKER         = 2,
