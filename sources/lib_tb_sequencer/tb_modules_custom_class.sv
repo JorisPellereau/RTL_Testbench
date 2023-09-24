@@ -112,7 +112,9 @@ class tb_modules_custom_class #(// == SET INJECTOR PARAMETERS ==
    int 	       i;                  // Index
 
    
-   
+   // == UTILS ==
+   tb_utils_class utils = new(); // Utils Class   
+   // ===========
 
    /* =====================================    
     * == GENERIC Testbench Modules Class ==
@@ -460,9 +462,13 @@ class tb_modules_custom_class #(// == SET INJECTOR PARAMETERS ==
 	 string cmd_args;  // Extract char. between "(" and ")"	 
 	 // ========================
 
-	 // Prin Line
-	 $display("%s", line.substr(0,line.len() - 2)); // Print line and Remove "\n" character
+	 // Print the Line
+	 string line_resize = this.utils.resize_line(line, 80); // REsized the line
+
+	 $display("%s - %t", line_resize, $time); // Print line and Remove "\n" character
 	 
+//	 $display("%s - %t", line.substr(0,line.len() - 2), $time); // Print line and Remove "\n" character
+//	 $display("CHK[%s] (%s) ... - %t", i_alias, i_args, $time);
 
 	 // Get the length of the line
 	 line_length = line.len();
@@ -663,8 +669,8 @@ class tb_modules_custom_class #(// == SET INJECTOR PARAMETERS ==
 		  this.tb_modelsim_cmd_inst.sel_modelsim_command(i_cmd_type,
 								 i_cmd_args);
 	       end
-	       else begin
-		 //$display("Error: Routed command failed");		  
+	       else begin	       
+		// $display("Error: Routed command failed - %s %s %s %s %s", i_cmd_type, i_alias_str, i_cmd, i_cmd_args, i_is_regular_cmd);
 	       end
 	    end
 	 end

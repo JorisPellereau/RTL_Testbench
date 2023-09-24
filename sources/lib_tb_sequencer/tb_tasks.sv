@@ -147,7 +147,7 @@ class tb_class #(
 	 
       
 	 // OPEN File
-	 $display("# == Beginning of Sequencer == #");
+	 $display("# == Beginning of Sequencer == #\n");
 	 scn_file = $fopen(scn_file_path, "r");
 
       
@@ -159,8 +159,8 @@ class tb_class #(
 
 
 	    // Display if special commentary
-	    if( {line.getc(0), line.getc(1), line.getc(2), line.getc(3)}  == "//--") begin
-	       $display("%s", line);	    
+	    if( {line.getc(0), line.getc(1), line.getc(2), line.getc(3)}  == "//--" || {line.getc(0), line.getc(1), line.getc(2), line.getc(3)}  == "//==") begin
+	       $display("%s", line.substr(0,line.len() - 2));	    
 	    end
 
 	    // Filter Commentary

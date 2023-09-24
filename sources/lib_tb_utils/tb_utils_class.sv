@@ -132,6 +132,33 @@ class tb_utils_class;
       
    endfunction // str_2_args
    
+
+
+   // Get the line, remove \n, padd with space at the end
+   function string resize_line(input string str, input int max_len);
+
+      int i; // Loop index      
+      string str_resize = str.substr(0,str.len() - 2); // Init with the input string and remove \n
+      int    str_len = str_resize.len(); // Length of the string
+
+      // If the string is lower than the maximal length
+      if(str_len <= max_len) begin
+
+	 // Loop until the max length is reached
+	 // Append " " (space)
+	 for(i = str_len; i < max_len ; i++) begin
+	    str_resize = {str_resize," "};   
+	 end
+	 //$display("debug resize_line , before : %d - after : %d", str.len(), str_resize.len());
+	 
+      end
+      else begin
+	 $display("Info: the length of the string is greater than %d", max_len);	 
+      end
+	      
+      return str_resize;
+   
+   endfunction // resize_line
    
      
 endclass // tb_utils_class

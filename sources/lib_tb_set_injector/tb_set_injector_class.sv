@@ -102,7 +102,7 @@ class tb_set_injector_class #(
 
       end
       
-      $display("");      
+//      $display("");      
       	 
    endtask // set_injector
 

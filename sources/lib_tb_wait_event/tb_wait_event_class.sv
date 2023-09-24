@@ -159,9 +159,10 @@ class tb_wait_event_class #(
 	 int 	       s_cnt      = 0;	 
 	 logic 	       s_cnt_done = 0;
 	 
-	 //$display("DEBUG - wait_duration");
-	 s_max_timeout_cnt = DECODE_TIMEOUT(i_args);
 
+	 s_max_timeout_cnt = DECODE_TIMEOUT(i_args);
+//	 $display("DEBUG WAIT s_max_timeout_cnt : %d", s_max_timeout_cnt);
+	 
 	 // WAIT until end of counter
 	 while(s_cnt_done == 1'b0) begin
 	    @(posedge this.wait_duration_vif.clk); // WAIT FOR RISING EDRE of CLK
@@ -189,7 +190,7 @@ class tb_wait_event_class #(
 
 
    // Decod Timeout Function
-   function logic [31:0] DECODE_TIMEOUT(input string i_args);
+   function logic [63:0] DECODE_TIMEOUT(input string i_args);
 
       string value_str;
       string unity;
@@ -197,7 +198,7 @@ class tb_wait_event_class #(
       int s_timeout_value = 0;
       int i;                     // Loop index
       int space_position    = 0; // Space between Args
-      int s_max_timeout_cnt = 0; // Max Timeout Value Counter
+      longint s_max_timeout_cnt = 0; // Max Timeout Value Counter
       
 
       // Get Space position
@@ -211,26 +212,28 @@ class tb_wait_event_class #(
       unity     = i_args.substr(space_position + 1, i_args.len() - 1); // Get Unity
            
       s_timeout_value = value_str.atoi(); // STR to INT
-      	  
+
+      //$display("DEBUG2 : G_CLK_PERIOD : %d", G_CLK_PERIOD);
+      
       case (unity) 
         "ps": begin
            s_max_timeout_cnt = s_timeout_value / G_CLK_PERIOD;
-           $display("Timeout : %d %s",s_timeout_value, unity);
+           //$display("Timeout : %d %s",s_timeout_value, unity);
 	end
 	   
         "ns": begin
 	   s_max_timeout_cnt = (1000 * s_timeout_value) / (G_CLK_PERIOD);
-	   $display("Timeout : %d %s",s_timeout_value, unity);
+	   //$display("Timeout : %d %s",s_timeout_value, unity);
         end
 	   
         "us": begin
            s_max_timeout_cnt = (1000000 * s_timeout_value) / (G_CLK_PERIOD);
-           $display("Timeout : %d %s",s_timeout_value, unity);
+           //$display("Timeout : %d %s",s_timeout_value, unity);
         end
 	   
         "ms": begin
            s_max_timeout_cnt = (1000000000 * s_timeout_value) / (G_CLK_PERIOD);
-           $display("Timeout : %d %s",s_timeout_value, unity);
+           //$display("Timeout : %d %s",s_timeout_value, unity);
         end
 		    
         default: begin

@@ -238,7 +238,7 @@ class testbench_creator_class(QtWidgets.QDialog):
         # Fill Generics
         file_setup_str = self.tb_str_cst.testbench_setup_generic_str.format(self.generic_module_info_list[0][0][1],
                                                                             self.generic_module_info_list[0][1][1],
-                                                                            "1000",
+                                                                            "2*`C_TB_CLK_HALF_PERIOD",
 
                                                                             self.generic_module_info_list[1][0][1],
                                                                             self.generic_module_info_list[1][0][1],

@@ -71,7 +71,7 @@ class tb_check_level_class #(
 	 string check_type_str;     // Check type string format (ERROR - OK etc)
 	 
 	 	 	 
-	 $display("CHK[%s] (%s) ... - %t", i_alias, i_args, $time);
+//	 $display("CHK[%s] (%s) ... - %t", i_alias, i_args, $time);
 	 	 
 	 // == Get " " position in args ==
 	 for(i = 0 ; i < i_args.len() ; i ++) begin
