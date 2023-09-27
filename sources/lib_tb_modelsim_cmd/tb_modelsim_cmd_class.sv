@@ -9,9 +9,9 @@
 // Status          : Unknown, Use with caution!
 
 // Add package - Not necessary
-package fli;
-    import "DPI-C" function mti_Cmd(input string cmd);
-endpackage // fli
+//package fli;
+//    import "DPI-C" function mti_Cmd(input string cmd);
+//endpackage // fli
 
    
 class tb_modelsim_cmd_class;

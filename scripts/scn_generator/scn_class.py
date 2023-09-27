@@ -39,7 +39,8 @@ class scn_class(generic_tb_cmd_class.generic_tb_cmd_class,
         self.scn_line_list             = []                          # List of line to write in file
         self.absolute_path_from_caller = inspect.stack()[1].filename # Absolute file path from Caller
         self.out_file                  = os.path.splitext(os.path.basename(self.absolute_path_from_caller))[0] + ".txt" # Create txt file
-        self.step_counter              = 0 # Step Counter Init
+        self.step_counter              = 0 # Step Counter Init - First sTEP start at 1
+        self.sub_step_counter          = 0 # Sub Step Counter
         super().__init__(self.scn_line_list) # Init Class
         
         
@@ -63,7 +64,15 @@ class scn_class(generic_tb_cmd_class.generic_tb_cmd_class,
         :param line_2_print: The comment line to add in the scenario file
         :type line_2_print: str
         """
-        self.scn_line_list.append("-- " + line_2_print)
+        self.scn_line_list.append("//-- " + line_2_print)
+
+
+    def print_line_break(self, line_break_nb):
+        """
+        Display in the transcript an emplty line. 
+        """
+        for i in range(0, line_break_nb):
+            self.scn_line_list.append("\n")
 
 
     # Print Step
@@ -74,11 +83,28 @@ class scn_class(generic_tb_cmd_class.generic_tb_cmd_class,
         :param line_2_print: The STEP to add in the commentary
         :type line_2_print: str
         """
+        self.step_counter += 1 # Inc Step Counter
+        self.sub_step_counter = 0 # Reset the sub step counter
         self.scn_line_list.append("\n//================================")
         self.scn_line_list.append("//-- STEP {0} : ".format(self.step_counter) + line_2_print)
         self.scn_line_list.append("//================================\n")
-        self.step_counter += 1 # Inc Step Counter
-   
+        
+
+
+    # Print SUB Step
+    def print_sub_step(self, line_2_print):
+        """
+        Add a SUB STEP number in commentary format in the self.scn_line_list variable
+
+        :param line_2_print: The SUB STEP to add in the commentary
+        :type line_2_print: str
+        """
+        self.scn_line_list.append("\n//--------------------------------")
+        self.scn_line_list.append("//-- STEP {0}.{1} : ".format(self.step_counter, self.sub_step_counter) + line_2_print)
+        self.scn_line_list.append("//--------------------------------\n")
+        self.sub_step_counter += 1 # Inc Sub Step Counter
+
+        
     # Close PY SCN file and print END_TEST
     def END_TEST(self):
         """

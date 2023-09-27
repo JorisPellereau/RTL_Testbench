@@ -405,13 +405,13 @@ module LCD_CFAH_emul #(
    end // always @ (posedge clk)
 
    assign s_lcd_display_concat[0] = {s_lcd_display[0][0],  s_lcd_display[0][1],  s_lcd_display[0][2],  s_lcd_display[0][3],
-				     s_lcd_display[0][4],  s_lcd_display[0][5],  s_lcd_display[0][6],  s_lcd_display[0][4],
+				     s_lcd_display[0][4],  s_lcd_display[0][5],  s_lcd_display[0][6],  s_lcd_display[0][7],
 				     s_lcd_display[0][8],  s_lcd_display[0][9],  s_lcd_display[0][10], s_lcd_display[0][11],
 				     s_lcd_display[0][12], s_lcd_display[0][13], s_lcd_display[0][14], s_lcd_display[0][15]
 				     };
 
    assign s_lcd_display_concat[1] = {s_lcd_display[1][0],  s_lcd_display[1][1],  s_lcd_display[1][2],  s_lcd_display[1][3],
-				     s_lcd_display[1][4],  s_lcd_display[1][5],  s_lcd_display[1][6],  s_lcd_display[1][4],
+				     s_lcd_display[1][4],  s_lcd_display[1][5],  s_lcd_display[1][6],  s_lcd_display[1][7],
 				     s_lcd_display[1][8],  s_lcd_display[1][9],  s_lcd_display[1][10], s_lcd_display[1][11],
 				     s_lcd_display[1][12], s_lcd_display[1][13], s_lcd_display[1][14], s_lcd_display[1][15]
 				     };

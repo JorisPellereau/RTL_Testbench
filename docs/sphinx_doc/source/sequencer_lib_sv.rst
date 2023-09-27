@@ -9,6 +9,8 @@ Library and files
 
 All files of the sequencer library are describe in the following table :
 
+TODO: checker la lecture des ligne du fichier scn, car plsieurs lecture retourn mauvaise line routed ..
+
 +---------------------------------+--------------------------------------------------------------------------------+
 | Files                           | Description                                                                    |
 +=================================+================================================================================+
