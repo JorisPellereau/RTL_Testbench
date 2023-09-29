@@ -425,6 +425,9 @@ class tb_modules_custom_class #(// == SET INJECTOR PARAMETERS ==
 	 logic 	is_regular_cmd; // Regular command when  == '1'	  
 	 
 	 decod_scn_line(line, cmd_type, alias_str, cmd, cmd_args);                 // Decode Scenarii lines
+
+//	 $display("DEBUG decod_scn_line : alias_str : %s - cmd : %s - cmd_args : %s", alias_str, cmd, cmd_args);
+	 
 	 check_commands(cmd_type, alias_str, check_ok, is_regular_cmd);            // Check if Command type exists and if Alias exists
 
 	 if(check_ok == 1) begin
@@ -450,9 +453,18 @@ class tb_modules_custom_class #(// == SET INJECTOR PARAMETERS ==
 	 int pos_parenthesis_0    = 0; // Position of ( character
 	 int pos_parenthesis_1    = 0; // Position of ) character
 	 int first_space_position = 0; // First position of " " character
-
+	 bit pos_parenthesis_0_find = 0; // A flag that indicates if the 1st parenthesis is found
+	 
+	 int pos_dbl_quote_0 = 0; // Position of first double quote
+	 int pos_dbl_quote_1 = 0; // Position of the second double quote
+	 bit pos_dbl_quote_0_find = 0; // Flag that indicates if a first double quote is detected
+	 bit pos_dbl_quote_1_find = 0; // Flag that indicates if a 2nd double quote is detected
+	      
 	 bit pos_0_find = 0; // 1 if first position of [ char. is find
-	 bit pos_1_find = 0; // 1 if first position of ] char. is find	 
+	 bit pos_1_find = 0; // 1 if first position of ] char. is find	
+	 
+	 bit process_modelsim_cmd = 0; // A flag that indicates if a Modelsim Command is beeing processed
+	  
 	 
 	 int i; // Loop Index
 
@@ -462,9 +474,11 @@ class tb_modules_custom_class #(// == SET INJECTOR PARAMETERS ==
 	 string cmd_args;  // Extract char. between "(" and ")"	 
 	 // ========================
 
+	 
+	 
 	 // Print the Line
 	 string line_resize = this.utils.resize_line(line, 80); // REsized the line
-
+	 $display("line : %s", line);
 	 $display("%s - %t", line_resize, $time); // Print line and Remove "\n" character
 	 
 //	 $display("%s - %t", line.substr(0,line.len() - 2), $time); // Print line and Remove "\n" character
@@ -489,14 +503,38 @@ class tb_modules_custom_class #(// == SET INJECTOR PARAMETERS ==
 	       pos_1_find = 1;
 	    end
 
+	    // Get first double quote, used in case of MODELSIM Command \"
+	    if(line.getc(i) == "\"" && pos_dbl_quote_0_find == 0) begin
+	       pos_dbl_quote_0 = i; // Get the position in the string
+	       pos_dbl_quote_0_find = 1; // 1st Double Quote Find
+	       process_modelsim_cmd = 1;
+ 	        
+	    end
+
+	    // Get 2nd double quote, used in case of MODELSIM Command \"
+	    if(line.getc(i) == "\"" && pos_dbl_quote_1_find == 0) begin
+	       pos_dbl_quote_1 = i; // Get the position in the string
+	       pos_dbl_quote_1_find = 1; // 2nd Double Quote Find	        
+	    end
+
 	    // Get "(" position
-	    if(line.getc(i) == "(") begin
-	       pos_parenthesis_0 = i;	       
+	    // Search for the 1st "(" and stop searching
+	    if(line.getc(i) == "(" && pos_parenthesis_0_find == 0) begin
+	       pos_parenthesis_0 = i;
+	       pos_parenthesis_0_find = 1;
 	    end
 
 	    // Get ")" position
-	    if(line.getc(i) == ")") begin
+	    // Case get the ")" character and no modelsim command is beeing processed
+	    if(line.getc(i) == ")" && process_modelsim_cmd == 0) begin
 	       pos_parenthesis_1 = i;	       
+	    end
+
+	    // Case a modelsim command is beeing processed and the 2nd double quote is find
+	    // Use in order to filter the string ( )  searching the the modelsim command, because the Modelsim command can contains
+	    // parenthesis
+	    else if(line.getc(i) == ")" && process_modelsim_cmd == 1 && pos_dbl_quote_1_find == 1) begin
+	       pos_parenthesis_1 = i;
 	    end
 	    
 	 end
