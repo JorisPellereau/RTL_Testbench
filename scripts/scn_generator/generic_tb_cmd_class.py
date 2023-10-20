@@ -273,3 +273,48 @@ class generic_tb_cmd_class:
                                                                                   test_value    = memory_ref,
                                                                                   test_variable = True)
         self.MODELSIM_CMD(test_signal_value_cmd_str)
+
+    # Load a Memory
+    def LOAD_MEMORY(self, memory_rtl_path, mem_file):
+        """
+        :param memory_rtl_path: RTL Path of the Memory to load
+        :param mem_file: The Memory file with path to load
+
+        :type memory_rtl_path: str
+        :type mem_file: str
+        """
+
+        self.MODELSIM_CMD("mem load -i {0} {1}".format(mem_file, memory_rtl_path))
+
+
+
+    # Create a Modelsim Memory in hex format (mti) and 1 wordsperline
+    def CREATE_MODELSIM_MEMORY(self, mem_file, data_list, rtl_mem_path, mem_data_width = 32, mem_depth = 256, default_data = 0):
+        """
+        :type data_list: list[list[int, string]]
+        """
+
+        mem_str_list = []
+        max_addr_len = len(hex(mem_depth - 1)[2:]) # Get the string length ot the last addr
+
+        mem_header_str = """// memory data file (do not edit the following line - required for mem load use)
+// instance={0}
+// format=mti addressradix=h dataradix=h version=1.0 wordsperline=1""".format(rtl_mem_path)
+        mem_data = [hex(default_data)[2:]]*mem_depth
+
+        # Update the mem_data in function of the data_list
+        for i in data_list:
+            mem_data[i[0]] = i[1]
+
+
+        mem_str_list.append(mem_header_str)
+        for i in range(0, mem_depth - 1):
+         
+            # Check if the addr in string format have the maximal length
+            mem_str_list.append(" "*(max_addr_len - len(hex(i)[2:])) + hex(i)[2:] + ": " + mem_data[i])
+       
+
+        mem_final_str = "\n".join(mem_str_list)
+        # Create the file
+        with open(mem_file, "w") as file_w:
+            file_w.writelines(mem_final_str)
