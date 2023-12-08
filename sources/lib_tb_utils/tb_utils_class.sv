@@ -159,6 +159,60 @@ class tb_utils_class;
       return str_resize;
    
    endfunction // resize_line
+
+
+   // Convert a timeout_value and a unity into an integer for a wait value. 
+   function longint DECODE_TIMEOUT(input int timeout_value,
+				   input string timeout_unity);
+
+      longint timeout_ps = 0; // Returned timeout
+      
+      case (timeout_unity) 
+        "ps": begin
+           timeout_ps = longint'(timeout_value);
+	end
+	   
+        "ns": begin
+	   timeout_ps = 1000*longint'(timeout_value);
+        end
+	   
+        "us": begin
+          timeout_ps = 1000000*longint'(timeout_value);
+        end
+	   
+        "ms": begin
+           timeout_ps = 1000000000*longint'(timeout_value);
+        end
+		    
+        default: begin
+           $display("Error: wrong unit format");		       
+        end
+		    
+      endcase
+   
+ 
+      return timeout_ps;
+      
+   endfunction // DECODE_TIMEOUT
+   
+   // Get the number of string inside a string delimited by space " "
+/* -----\/----- EXCLUDED -----\/-----
+   function int get_args_nb(input string str);
+      int args_nb = 0; // Args Number
+      int i       = 0; // Loop index
+      
+       for(i = 0 ; i < str.len() ; i ++) begin
+	    if(str.getc(i) == " ") begin
+	       args_nb += 1;	       
+	    end	    	    
+	 end
+
+	 args_nb += 1; // Number of space + 1
+
+      return args_nb;
+   endfunction // get_args_nb
+ -----/\----- EXCLUDED -----/\----- */
+   
    
      
 endclass // tb_utils_class

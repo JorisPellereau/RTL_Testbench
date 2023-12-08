@@ -1,4 +1,4 @@
-//`include "/home/linux-jp/Documents/GitHub/Verilog/Testbench/sources/lib_tb_utils/tb_utils_class.sv"
+import pkg_tb::*;
 
 class tb_master_axi4lite_class #(
 				 parameter G_NB_MASTER_AXI4LITE  = 2,
@@ -13,10 +13,10 @@ class tb_master_axi4lite_class #(
     */
 
    string MASTER_AXI4LITE_COMMAND_TYPE = "MASTER_AXI4LITE"; // Commande Type   
-   string MASTER_AXI4LITE_ALIAS;                 // Alias of Current Master AXI4LITE Testbench Module
+   string MASTER_AXI4LITE_ALIAS;                            // Alias of Current Master AXI4LITE Testbench Module
 
    // == UTILS ==
-//   tb_utils_class utils = new(); // Utils Class   
+   tb_utils_class utils = new(); // Utils Class   
    // ===========
    
    
@@ -37,13 +37,13 @@ class tb_master_axi4lite_class #(
 
    // == LIST of DATA CHECKER COMMANDS ==
    
-   // MASTER_AXI4LITE[alias] WRITE(DATA, ADDR, STROBE, EXPC)
-   // MASTER_AXI4LITE[alias] READ(DATA, ADDR, RESP, EXPC)
+   // MASTER_AXI4LITE[alias] WRITE(DATA DATA STROBE EXPC TIMEOUT_VALUE TIMEOUT_UNITY)
+   // MASTER_AXI4LITE[alias] READ(DATA DATA STROBE EXPC TIMEOUT_VALUE TIMEOUT_UNITY)
    
    // ===================================
 
 
-   // List of Command of DATA_CHECKER
+   // List of Command of MASTER AXI4 Lite
    int 		       MASTER_AXI4LITE_CMD_ARRAY [string] = '{
 							      "WRITE"  : 0,
 							      "READ"   : 1
@@ -55,29 +55,20 @@ class tb_master_axi4lite_class #(
 			 input string i_axi4_alias, 
 			 input string i_axi4_cmd_args);
       begin
-	 case(i_axi4_cmd)        
-/* -----\/----- EXCLUDED -----\/-----
-	   "CONFIG": begin
-	      CONFIG (i_axi4_alias,
-		      i_axi4_cmd_args		       
-		      );	     
-
-	   end
- -----/\----- EXCLUDED -----/\----- */
+	 
+	 case(i_axi4_cmd)
 	   
 	   "WRITE" :  begin
 	      MASTER_AXI4_LITE_WRITE  (i_axi4_alias,
 				       i_axi4_cmd_args
 				       );
-
+	      
 	   end
 	   
 	   "READ" : begin
-/* -----\/----- EXCLUDED -----\/-----
-	      UART_RX_WAIT_DATA (i_uart_alias,
-				 i_uart_cmd_args
-				 );
- -----/\----- EXCLUDED -----/\----- */
+	      MASTER_AXI4_LITE_READ (i_axi4_alias,
+				     i_axi4_cmd_args
+				     );
 	   end
 	   
 
@@ -89,11 +80,10 @@ class tb_master_axi4lite_class #(
 
 
 
-      /* Task : Execute an AXI4 Master Write access
-       * * BLOCKING COMMAND
-       * - 
-       */
-  
+   /* Task : Execute an AXI4 Master Write access
+    * * BLOCKING COMMAND
+    * - 
+    */  
    task MASTER_AXI4_LITE_WRITE(
 			       input string axi4_alias,
 			       input string axi4_cmd_args		       
@@ -101,34 +91,220 @@ class tb_master_axi4lite_class #(
       begin
 
 	 // Internal Variables
-	 int data_nb        = 0;
-	 int i              = 0;
-	 int space_position = 0;
-	 int start_pos      = 0;
-	 int data_cnt       = 0;
-	 int data_int       = 0;
-	 int data_tmp;
-	 string str_tmp;
-	 int 	array_index = 0;
+	 int addr;
+	 int wdata;
+	 int strobe;
+	 int rdata;
+	 int access_status;	 
+	 int expc;
+	 int timeout_value;
+	 string timeout_unity;
+	 longint timeout_ps;
+	 bit 	 timeout;
+	 	 
+	 args_t args;
 
-	 $display("Run MASTER_AXI4LITE[%s] CONFIG(%s) ... - %t", axi4_alias, axi4_cmd_args, $time);
+	 //$display("Run MASTER_AXI4LITE[%s] CONFIG(%s) ... - %t", axi4_alias, axi4_cmd_args, $time);
 	 	 
 	 // Get the number of data in uart_cmd_args
-	 for(i = 0 ; i < axi4_cmd_args.len() ; i ++) begin
-	    if(axi4_cmd_args.getc(i) == " ") begin
-	       data_nb += 1;	       
-	    end	    	    
+	 args = this.utils.str_2_args(axi4_cmd_args);
+
+	 // Converts string args into int
+	 addr   = this.utils.str_2_int(args[0]); // Convert the string into a int
+	 wdata  = this.utils.str_2_int(args[1]); // Convert the string into a int
+	 strobe = this.utils.str_2_int(args[2]); // Convert the string into a int
+	 expc   = this.utils.str_2_int(args[3]); // Convert the string into a int
+
+	 // Check if TIMEOUT_VALUE and TIMEOUT_UNITY are present in the string
+	 // If yes -> Update timeout_value and timeout_unity
+	 if(args.len() == 6) begin
+	    timeout_value = this.utils.str_2_int(args[4]);
+	    timeout_unity = args[5];
+	    timeout_ps    = this.utils.DECODE_TIMEOUT(timeout_value, timeout_unity);
+	 end	 	 
+
+	 @(negedge this.data_checker_vif.clk); // Wait for the falling edge for synchronization
+	 this.data_checker_vif.addr         = addr;
+	 this.data_checker_vif.master_wdata = wdata;
+	 this.data_checker_vif.strobe       = strobe;
+	 this.data_checker_vif.rnw          = 0; // 0 -> Write access
+	 this.data_checker_vif.start        = 1; // Start the access
+	 
+	 @(negedge this.data_checker_vif.clk); // Wait for the next falling edge and reset signal
+	 this.data_checker_vif.addr   = 0;
+	 this.data_checker_vif.data   = 0;
+	 this.data_checker_vif.strobe = 0;
+	 this.data_checker_vif.rnw    = 0;
+	 this.data_checker_vif.start  = 0;
+
+
+	 // No Timeout Case
+	 if(args.len() != 6) begin
+	    // Wait until the end of the access
+	    @(posedge this.data_checker_vif.done);
+	    
 	 end
 
-	 data_nb += 1; // Number of space + 1
+	 // Timeout Case
+	 else begin
+
+	    fork begin
+	       fork begin
+		  #timeout_ps;		  
+		  timeout = '1;
+	       end // else: !if(args.len() != 6)
+	       join_none
+	       wait(this.data_checker_vif.done == 1 || timeout);
+	       disable fork;
+	    end join // else: !if(args.len() != 6)
+	    
+	 end
+
+	 // After the detection of the done signal or after the timeout -> Get status
+	 rdata         = this.data_checker_vif.master_rdata;
+	 access_status = this.data_checker_vif.access_status;
+
 	 
-	 
-	 $display("MASTER_AXI4Lite CONFIG DONE - %t", $time);
+	 // Perform the check of the status
+	 // NO TIMEOUT Case
+	 if(access_status != expc && timeout == 0) begin
+	    $display("Error: MASTER_AXI4LITE WRITE[%s] expected %x != %x", axi4_alias, expc, access_status);
+	 end
+
+	 // TIMEOUT Case
+	 else if(timeout == 1) begin
+	    $display("Error: MASTER_AXI4LITE WRITE[%s] timeout occurs at %t", $time);
+	 end
+
+	 // NO Error
+	 else begin
+	    $display("MASTER_AXI4LITE WRITE[%s] expected %x == %x -> OK", axi4_alias, expc, access_status);
+	 end
 	 
       end
-   endtask // CONFIG
-   
+  	 
+      $display("DEBUG MASTER_AXI4Lite WRITE DONE - %t", $time);
+	 
+   endtask
 
-   
-   
+   /* Task : Execute an AXI4 Master READ access
+    * * BLOCKING COMMAND
+    * - 
+    */  
+   task MASTER_AXI4_LITE_READ(
+			       input string axi4_alias,
+			       input string axi4_cmd_args		       
+			       );
+      begin
+
+	 // Internal Variables
+	 int addr;
+	 int expc_rdata;
+	 int rdata;
+	 int access_status;	 
+	 int expc;
+	 int timeout_value;
+	 string timeout_unity;
+	 longint timeout_ps;
+	 bit 	 timeout;
+	 	 
+	 args_t args;
+
+	 //$display("Run MASTER_AXI4LITE[%s] CONFIG(%s) ... - %t", axi4_alias, axi4_cmd_args, $time);
+	 	 
+	 // Get the number of data in uart_cmd_args
+	 args = this.utils.str_2_args(axi4_cmd_args);
+
+	 // Converts string args into int
+	 addr       = this.utils.str_2_int(args[0]); // Convert the string into a int
+	 expc_rdata = this.utils.str_2_int(args[1]); // Convert the string into a int
+	 expc       = this.utils.str_2_int(args[2]); // Convert the string into a int
+
+	 // Check if TIMEOUT_VALUE and TIMEOUT_UNITY are present in the string
+	 // If yes -> Update timeout_value and timeout_unity
+	 if(args.len() == 5) begin
+	    timeout_value = this.utils.str_2_int(args[3]);
+	    timeout_unity = args[4];
+	    timeout_ps    = this.utils.DECODE_TIMEOUT(timeout_value, timeout_unity);
+	 end	 	 
+
+	 @(negedge this.data_checker_vif.clk); // Wait for the falling edge for synchronization
+	 this.data_checker_vif.addr         = addr;
+	 this.data_checker_vif.master_wdata = 0;
+	 this.data_checker_vif.strobe       = 0;
+	 this.data_checker_vif.rnw          = 1; // 1 -> Write access
+	 this.data_checker_vif.start        = 1; // Start the access
+	 
+	 @(negedge this.data_checker_vif.clk); // Wait for the next falling edge and reset signal
+	 this.data_checker_vif.addr   = 0;
+	 this.data_checker_vif.data   = 0;
+	 this.data_checker_vif.strobe = 0;
+	 this.data_checker_vif.rnw    = 0;
+	 this.data_checker_vif.start  = 0;
+
+
+	 // No Timeout Case
+	 if(args.len() != 6) begin
+	    // Wait until the end of the access
+	    @(posedge this.data_checker_vif.done);
+	    
+	 end
+
+	 // Timeout Case
+	 else begin
+
+	    fork begin
+	       fork begin
+		  #timeout_ps;		  
+		  timeout = '1;
+	       end // else: !if(args.len() != 6)
+	       join_none
+	       wait(this.data_checker_vif.done == 1 || timeout);
+	       disable fork;
+	    end join // else: !if(args.len() != 6)
+	    
+	 end
+
+	 // After the detection of the done signal or after the timeout -> Get status
+	 rdata         = this.data_checker_vif.master_rdata;
+	 access_status = this.data_checker_vif.access_status;
+
+	 
+	 // Perform the check of the status
+	 // RDATA == Expected_rdata and access_status == expected and NO TIMEOUT
+	 if(rdata == expc_rdata && access_status == expc && timeout == 0) begin
+	    $display("MASTER_AXI4LITE READ[%s] @(0x%x) == %x (expected %x) - Status %x == %x -> OK", axi4_alias, addr, expc, expc_rdata, access_status);
+	 end
+
+	 // RDATA != Expected_rdata and access_status == expected and NO TIMEOUT
+	 else if(rdata != expc_rdata && access_status == expc && timeout == 0) begin
+	    $display("Error : MASTER_AXI4LITE READ[%s] @(0x%x) == %x (expected %x) - Status %x == %x -> ERROR", axi4_alias, addr, expc, expc_rdata, access_status);
+	 end
+
+	 // RDATA == Expected_rdata and access_status != expected and NO TIMEOUT
+	 else if(rdata == expc_rdata && access_status != expc && timeout == 0) begin
+	    $display("MASTER_AXI4LITE READ[%s] @(0x%x) == %x (expected %x) - Status %x != %x -> ERROR", axi4_alias, addr, expc, expc_rdata, access_status);
+	 end
+
+	 // RDATA != Expected_rdata and access_status != expected and NO TIMEOUT
+	 else if(rdata != expc_rdata && access_status == expc && timeout == 0) begin
+	    $display("Error : MASTER_AXI4LITE READ[%s] @(0x%x) == %x (expected %x) - Status %x != %x -> ERROR", axi4_alias, addr, expc, expc_rdata, access_status);
+	 end
+	 
+	 // TIMEOUT Case
+	 else if(timeout == 1) begin
+	    $display("Error: MASTER_AXI4LITE READ[%s] @(0x%x) timeout occurs at %t", axi4_alias, addr, $time);
+	 end
+
+	 // NO Error
+	 else begin
+	    
+	 end
+	 
+      end
+  	 
+      $display("DEBUG MASTER_AXI4Lite READ DONE - %t", $time);
+	 
+   endtask
+
 endclass // tb_master_axi4_class

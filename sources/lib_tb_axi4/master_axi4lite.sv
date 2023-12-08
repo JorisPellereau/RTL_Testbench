@@ -71,7 +71,8 @@ module master_axi4lite #(
    assign rnw          = master_axi4lite_if.rnw;
    assign strobe       = master_axi4lite_if.strobe;
    assign master_wdata = master_axi4lite_if.master_wdata;
-   
+
+   assign master_axi4lite_if.clk           = clk;   
    assign master_axi4lite_if.done          = done;
    assign master_axi4lite_if.master_rdata  = master_rdata;
    assign master_axi4lite_if.access_status = access_status;

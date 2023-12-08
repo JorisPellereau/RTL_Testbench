@@ -4,6 +4,7 @@ interface master_axi4lite_intf #(
 				 );
    
    // Configuration signals
+   logic clk;                                                 // Clock of the clk axi4lite master
    logic start;                                               // Start the transaction
    logic [G_AXI4LITE_ADDR_WIDTH-1:0] addr;                    // Set the ADDR
    logic 			     rnw;                     // Read (1) or write (0)
