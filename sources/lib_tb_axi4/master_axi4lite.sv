@@ -20,6 +20,25 @@ module master_axi4lite #(
    logic [G_AXI4_LITE_DATA_WIDTH - 1 : 0] 	master_rdata;  // Master Read data
    logic [1:0] 					access_status; // Access status
 
+   logic 					awvalid ;
+   logic [G_AXI4_LITE_ADDR_WIDTH-1:0] 		awaddr  ;
+   logic [2:0]					awprot  ;
+   logic 					awready ;
+   logic 					wvalid  ;
+   logic [G_AXI4_LITE_DATA_WIDTH - 1 : 0] 	wdata   ;
+   logic [(G_AXI4_LITE_DATA_WIDTH / 8) - 1 : 0]	wstrb   ;
+   logic 					wready  ;
+   logic 					bready  ;
+   logic 					bvalid  ;
+   logic [1:0] 					bresp   ;
+   logic 					arvalid ;
+   logic [G_AXI4_LITE_ADDR_WIDTH-1:0] 		araddr  ;
+   logic [2:0]					arprot  ;
+   logic 					arready ;
+   logic 					rready  ;
+   logic 					rvalid  ;
+   logic [G_AXI4_LITE_DATA_WIDTH - 1 : 0] 	rdata   ;
+   logic [1:0] 					rresp   ; 
 
 
    
