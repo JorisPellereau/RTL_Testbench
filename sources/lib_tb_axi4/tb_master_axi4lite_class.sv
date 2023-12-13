@@ -21,7 +21,7 @@ class tb_master_axi4lite_class #(
    
    
    // == VIRTUAL I/F ==
-   // DATA_COLLECTOR interface
+   // Master AXI4Lite interface
    virtual master_axi4lite_intf #(G_AXI4LITE_ADDR_WIDTH, G_AXI4LITE_DATA_WIDTH) master_axi4lite_vif;   
    // =================
 
@@ -132,11 +132,11 @@ class tb_master_axi4lite_class #(
 	 this.master_axi4lite_vif.start        = 1; // Start the access
 	 
 	 @(negedge this.master_axi4lite_vif.clk); // Wait for the next falling edge and reset signal
-	 this.master_axi4lite_vif.addr   = 0;
-	 this.master_axi4lite_vif.data   = 0;
-	 this.master_axi4lite_vif.strobe = 0;
-	 this.master_axi4lite_vif.rnw    = 0;
-	 this.master_axi4lite_vif.start  = 0;
+	 this.master_axi4lite_vif.addr           = 0;
+	 this.master_axi4lite_vif.master_wdata   = 0;
+	 this.master_axi4lite_vif.strobe         = 0;
+	 this.master_axi4lite_vif.rnw            = 0;
+	 this.master_axi4lite_vif.start          = 0;
 
 
 	 // No Timeout Case
@@ -214,8 +214,8 @@ class tb_master_axi4lite_class #(
 	 //$display("Run MASTER_AXI4LITE[%s] CONFIG(%s) ... - %t", axi4_alias, axi4_cmd_args, $time);
 	 	 
 	 // Get the number of data in uart_cmd_args
+	 
 	 args = this.utils.str_2_args(axi4_cmd_args);
-
 	 // Converts string args into int
 	 addr       = this.utils.str_2_int(args[0]); // Convert the string into a int
 	 expc_rdata = this.utils.str_2_int(args[1]); // Convert the string into a int
@@ -223,7 +223,7 @@ class tb_master_axi4lite_class #(
 
 	 // Check if TIMEOUT_VALUE and TIMEOUT_UNITY are present in the string
 	 // If yes -> Update timeout_value and timeout_unity
-	 if(args.size() == 5) begin
+	 if(args.size() == 6) begin
 	    timeout_value = this.utils.str_2_int(args[3]);
 	    timeout_unity = args[4];
 	    timeout_ps    = this.utils.DECODE_TIMEOUT(timeout_value, timeout_unity);
@@ -237,11 +237,11 @@ class tb_master_axi4lite_class #(
 	 this.master_axi4lite_vif.start        = 1; // Start the access
 	 
 	 @(negedge this.master_axi4lite_vif.clk); // Wait for the next falling edge and reset signal
-	 this.master_axi4lite_vif.addr   = 0;
-	 this.master_axi4lite_vif.data   = 0;
-	 this.master_axi4lite_vif.strobe = 0;
-	 this.master_axi4lite_vif.rnw    = 0;
-	 this.master_axi4lite_vif.start  = 0;
+	 this.master_axi4lite_vif.addr           = 0;
+	 this.master_axi4lite_vif.master_wdata   = 0;
+	 this.master_axi4lite_vif.strobe         = 0;
+	 this.master_axi4lite_vif.rnw            = 0;
+	 this.master_axi4lite_vif.start          = 0;
 
 
 	 // No Timeout Case
@@ -274,22 +274,22 @@ class tb_master_axi4lite_class #(
 	 // Perform the check of the status
 	 // RDATA == Expected_rdata and access_status == expected and NO TIMEOUT
 	 if(rdata == expc_rdata && access_status == expc && timeout == 0) begin
-	    $display("MASTER_AXI4LITE READ[%s] @(0x%x) == 0x%x (expected %x) - Status %x == %x -> OK", axi4_alias, addr, rdata, expc, expc_rdata, access_status);
+	    $display("MASTER_AXI4LITE READ[%s] @0x%x == 0x%x (expected %x) - Status %x == %x -> OK", axi4_alias, addr, rdata, expc_rdata, expc, access_status);
 	 end
 
 	 // RDATA != Expected_rdata and access_status == expected and NO TIMEOUT
 	 else if(rdata != expc_rdata && access_status == expc && timeout == 0) begin
-	    $display("Error : MASTER_AXI4LITE READ[%s] @(0x%x) == 0x%x (expected %x) - Status %x == %x -> ERROR", axi4_alias, addr, rdata, expc, expc_rdata, access_status);
+	    $display("Error : MASTER_AXI4LITE READ[%s] @0x%x == 0x%x (expected %x) - Status %x == %x -> ERROR", axi4_alias, addr, rdata, expc_rdata, expc, access_status);
 	 end
 
 	 // RDATA == Expected_rdata and access_status != expected and NO TIMEOUT
 	 else if(rdata == expc_rdata && access_status != expc && timeout == 0) begin
-	    $display("MASTER_AXI4LITE READ[%s] @(0x%x) == 0x%x (expected %x) - Status %x != %x -> ERROR", axi4_alias, addr, rdata, expc, expc_rdata, access_status);
+	    $display("MASTER_AXI4LITE READ[%s] @0x%x == 0x%x (expected %x) - Status %x != %x -> ERROR", axi4_alias, addr, rdata, expc_rdata, expc, access_status);
 	 end
 
 	 // RDATA != Expected_rdata and access_status != expected and NO TIMEOUT
-	 else if(rdata != expc_rdata && access_status == expc && timeout == 0) begin
-	    $display("Error : MASTER_AXI4LITE READ[%s] @(0x%x) == 0x%x (expected %x) - Status %x != %x -> ERROR", axi4_alias, addr, rdata, expc, expc_rdata, access_status);
+	 else if(rdata != expc_rdata && access_status != expc && timeout == 0) begin
+	    $display("Error : MASTER_AXI4LITE READ[%s] @0x%x == 0x%x (expected %x) - Status %x != %x -> ERROR", axi4_alias, addr, rdata, expc_rdata, expc, access_status);
 	 end
 	 
 	 // TIMEOUT Case
@@ -303,8 +303,6 @@ class tb_master_axi4lite_class #(
 	 end
 	 
       end
-  	 
-      $display("DEBUG MASTER_AXI4Lite READ DONE - %t", $time);
 	 
    endtask
 

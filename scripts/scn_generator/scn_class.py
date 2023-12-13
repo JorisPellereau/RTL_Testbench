@@ -7,6 +7,7 @@
 # Update : - 24/04/2021 - Add UART Testbench class
 #          - 27/11/2021 - Modif. class in order to inherites from Commands class
 #          - 26/04/2023 - Add commentary for sphinx documentation
+#          - 13/12/2023 - Add tb_axi4_cmd_class
 
 import sys
 import os
@@ -17,12 +18,15 @@ import generic_tb_cmd_class
 import tb_uart_cmd_class
 import tb_data_collector_cmd_class
 import tb_data_checker_cmd_class
+import tb_axi4_cmd_class
 
 # Extends of generic_tb_cmd_class
 class scn_class(generic_tb_cmd_class.generic_tb_cmd_class,
                 tb_uart_cmd_class.tb_uart_cmd_class,
                 tb_data_collector_cmd_class.tb_data_collector_cmd_class,
-                tb_data_checker_cmd_class.tb_data_checker_cmd_class):
+                tb_data_checker_cmd_class.tb_data_checker_cmd_class,
+                tb_axi4_cmd_class.tb_axi4_cmd_class
+                ):
 
     """
     This class is the top level class for the utilisation of the testbench module commands.

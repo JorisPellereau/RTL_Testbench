@@ -478,7 +478,7 @@ class tb_modules_custom_class #(// == SET INJECTOR PARAMETERS ==
 	 
 	 // Print the Line
 	 string line_resize = this.utils.resize_line(line, 80); // REsized the line
-	 $display("line : %s", line);
+//	 $display("line : %s", line);
 	 $display("%s - %t", line_resize, $time); // Print line and Remove "\n" character
 	 
 //	 $display("%s - %t", line.substr(0,line.len() - 2), $time); // Print line and Remove "\n" character
@@ -655,6 +655,7 @@ class tb_modules_custom_class #(// == SET INJECTOR PARAMETERS ==
 	 int i = 0; // Loop index
 
 	 if(i_is_regular_cmd == 0) begin
+	    
 	    // Loop on all possible commands
 	    for (i = 0; i < this.tb_infos_ptr ; i++) begin
 	    
@@ -671,6 +672,17 @@ class tb_modules_custom_class #(// == SET INJECTOR PARAMETERS ==
 															   i_alias_str, 
 															   i_cmd_args);
 	       end
+
+	       //Check if Command are "MASTER_AXI4LITE" Types
+	       else if (this.tb_modules_infos[i].cmd_type == "MASTER_AXI4LITE" && i_cmd_type == "MASTER_AXI4LITE") begin
+		  this.tb_master_axi4lite_inst[this.tb_modules_infos[i].alias_list[i_alias_str]].sel_axi4_command(i_cmd, 
+														  i_alias_str, 
+														  i_cmd_args);
+
+	       end
+	       // TBD !!! DATA_CHECKER !!!!!
+	       //else if() begin
+	       //end
 	    end // for (i = 0; i < this.tb_infos_ptr ; i++)
 	 end // if (i_is_regular_cmd == 0)
 

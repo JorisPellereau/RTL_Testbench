@@ -96,7 +96,7 @@ class tb_utils_class;
       
       str_len         = str.len();                       // Get STR len()
       space_positions = this.str_2_space_positions(str); // Get Space Positions
-      $display("space_positions : %p", space_positions);
+//      $display("space_positions : %p", space_positions);
 
       args_nb = space_positions.size() + 1; // Number of space position + 1
       
