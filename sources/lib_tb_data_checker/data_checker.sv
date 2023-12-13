@@ -58,8 +58,8 @@ module data_checker #(
    data_checker_intf #(
 		       .G_NB_CHECKER         (G_NB_CHECKER),
 		       .G_CHECKER_DATA_WIDTH (G_CHECKER_DATA_WIDTH)
-		       ) data_checker_if(); // Interna Interface
-
+		       ) data_checker_if(); // Internal Interface
+   
 
  
    // == Interface Connection Management ==

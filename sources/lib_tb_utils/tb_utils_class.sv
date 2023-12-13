@@ -8,31 +8,26 @@
 // Update Count    : 0
 // Status          : Unknown, Use with caution!
 
+
 // == TYPE DEF ==
 typedef int space_position_t []; // Dynamics Array of int
 typedef string args_t [];        // Dynamics Array of string   
 // ==============
 
 class tb_utils_class;
-
-   
-   
-   int data_size;
-      
+        
    function new ();     
    endfunction // new
    
       
    // Convert an input string into an integer
-   function int str_2_int (input string str, output int result);
+   function int str_2_int (input string str);
       
       int s_str_len;
       
       string s_str;
-      int    s_value;
-      
-      
-      result = 0;
+      int    s_value = 0;            
+      int result = 0;
       
       if( {str.getc(0),  str.getc(1)} == "0x") begin
 	 

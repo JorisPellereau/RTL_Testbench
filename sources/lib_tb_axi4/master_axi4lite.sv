@@ -9,7 +9,11 @@ module master_axi4lite #(
     );
 
    // == INTERNAL Signals ==
-   master_axi4lite_intf master_axi4lite_if; // Interface between wrapper and class
+   master_axi4lite_intf #(
+			  .G_AXI4LITE_ADDR_WIDTH(G_AXI4_LITE_ADDR_WIDTH),
+			  .G_AXI4LITE_DATA_WIDTH(G_AXI4_LITE_DATA_WIDTH)
+			  ) 
+   master_axi4lite_if(); // Interface between wrapper and class
    
    logic  start;                                               // Start the transaction
    logic [G_AXI4_LITE_ADDR_WIDTH-1:0] addr;                    // Set the ADDR
