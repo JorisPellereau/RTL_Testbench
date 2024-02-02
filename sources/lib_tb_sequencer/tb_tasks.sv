@@ -43,7 +43,10 @@ class tb_class #(
 		 // == MASTER AXI4LITE PARAMETERS ==
 		 parameter G_NB_MASTER_AXI4LITE  = 2,
 		 parameter G_AXI4LITE_ADDR_WIDTH = 32,
-		 parameter G_AXI4LITE_DATA_WIDTH = 32
+		 parameter G_AXI4LITE_DATA_WIDTH = 32,
+
+		 // == SLAVE I2C PARAMETERS ==
+		 parameter G_SLAVE_I2C_FIFO_WIDTH = 256
 		 );
 
 
@@ -64,7 +67,8 @@ class tb_class #(
 			     G_DATA_CHECKER_WIDTH,
 			     G_NB_MASTER_AXI4LITE,
 			     G_AXI4LITE_ADDR_WIDTH,
-			     G_AXI4LITE_DATA_WIDTH 
+			     G_AXI4LITE_DATA_WIDTH,
+			     G_SLAVE_I2C_FIFO_WIDTH
 			     ) tb_modules_custom_inst;  // Create Handle
    // ====================================
 

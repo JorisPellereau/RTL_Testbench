@@ -3,19 +3,25 @@ I2C Slave Instanciation
  
  
 */
-module i2c_slave (
-		  inout sclk,
-		  inout sda
-		  );
+module i2c_slave #(
+		   parameter G_SLAVE_I2C_FIFO_WIDTH = 256
+		   )
+   (
+    inout sclk,
+    inout sda
+    );
    
    
    // == INTERNAL Signals ==
-   i2c_slave_intf i2c_slave_if; // I2C Slave Interface
-   wire   start_condition; // Start Condition detection
-   wire   reset_start_condition; // Reset start condition
+   i2c_slave_intf #(
+		    .G_SLAVE_I2C_FIFO_WIDTH(G_SLAVE_I2C_FIFO_WIDTH)
+		    ) i2c_slave_if(); // I2C Slave Interface
+   
+   reg   start_condition; // Start Condition detection
+   reg   reset_start_condition; // Reset start condition
    
    
-   wire   stop_condition; // Stop Condition detection
+   reg   stop_condition; // Stop Condition detection
 
    logic [3:0] bit_cnt; // Bit Counter - Counter until 9 and reload to 0
    logic       byte_received; // Byte received info
@@ -138,6 +144,7 @@ module i2c_slave (
 
    initial begin
       i2c_slave_if.ptr_write_rx <= 0;
+      i2c_slave_if.ptr_read_rx <= 0;
    end
 
    // Write data to RX memory

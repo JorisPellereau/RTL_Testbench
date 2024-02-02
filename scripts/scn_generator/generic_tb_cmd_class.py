@@ -10,7 +10,8 @@
 
 import sys
 
-modelsim_tcl_class_path = "/home/linux-jp/Documents/GitHub/Verilog/Testbench/scripts/scn_generator/modelsim_tcl"
+modelsim_tcl_class_path = "/home/linux-jp/Documents/GitHub/RTL_Testbench/scripts/scn_generator/modelsim_tcl"
+#"/home/linux-jp/Documents/GitHub/Verilog/Testbench/scripts/scn_generator/modelsim_tcl"
 sys.path.append(modelsim_tcl_class_path)
 # Add TCL modelsim class
 import modelsim_tcl_class

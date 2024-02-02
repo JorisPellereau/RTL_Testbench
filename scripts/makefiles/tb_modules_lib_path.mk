@@ -8,3 +8,4 @@ TB_MODULES_LIB_PATH+=/RTL_Testbench/sources/lib_tb_data_collector
 TB_MODULES_LIB_PATH+=/RTL_Testbench/sources/lib_tb_data_checker
 TB_MODULES_LIB_PATH+=/RTL_Testbench/sources/lib_tb_uart
 TB_MODULES_LIB_PATH+=/RTL_Testbench/sources/lib_tb_axi4
+TB_MODULES_LIB_PATH+=/RTL_Testbench/sources/lib_tb_i2c

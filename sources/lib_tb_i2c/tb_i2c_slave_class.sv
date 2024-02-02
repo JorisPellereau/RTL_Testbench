@@ -123,13 +123,14 @@ class tb_i2c_slave_class #(
 
 	 // Internal Variables
 	 int data_to_load;
-		 
+	 int i; // Loop index
+	 
 	 args_t args;
 	 
 	 // Get an array of string for each arg.
 	 args = this.utils.str_2_args(i_i2c_slave_cmd_args);
 	 
-	 for(i = 0 ; i < args.len() ; i++) begin
+	 for(i = 0 ; i < args.size() ; i++) begin
 	    data_to_load = this.utils.str_2_int(args[i]);                                   // Convert the string into a int
 	    this.i2c_slave_vif.mem_tx_data[this.i2c_slave_vif.ptr_write_tx] <= data_to_load; // Load the data
 	    this.i2c_slave_vif.ptr_write_tx <= this.i2c_slave_vif.ptr_write_tx + 1;         // Inc the pointer	    
@@ -155,13 +156,14 @@ class tb_i2c_slave_class #(
 	 // Internal Variables
 	 int data_to_check;
 	 int rx_data;
-		 
+	 int i; // Loop index
+	 
 	 args_t args;
 	 
 	 // Get an array of string for each arg.
 	 args = this.utils.str_2_args(i_i2c_slave_cmd_args);
 	 
-	 for(i = 0 ; i < args.len() ; i++) begin
+	 for(i = 0 ; i < args.size() ; i++) begin
 	    data_to_check = this.utils.str_2_int(args[i]);                            // Convert the string into a int
 	    rx_data = this.i2c_slave_vif.mem_rx_data[this.i2c_slave_vif.ptr_read_rx]; // Get RX Data
 	    
