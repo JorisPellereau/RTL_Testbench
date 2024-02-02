@@ -8,27 +8,9 @@
 // Update Count    : 0
 // Status          : Unknown, Use with caution!
 
-//`include "/home/jorisp/GitHub/Verilog/lib_tb_uart/tb_uart_class.sv"
-
 // == REGULAR TESTBENCH CLASS ==
 
 import pkg_tb::*;
-
-//`include "~/Documents/GitHub/RTL_Testbench/sourceslib_tb_set_injector/tb_set_injector_class.sv"
-/*`include "~/Documents/GitHub/RTL_Testbench/sourceslib_tb_wait_event/tb_wait_event_class.sv"
-`include "~/Documents/GitHub/RTL_Testbench/sourceslib_tb_check_level/tb_check_level_class.sv"
-`include "~/Documents/GitHub/RTL_Testbench/sourceslib_tb_modelsim_cmd/tb_modelsim_cmd_class.sv"
- -----/\----- EXCLUDED -----/\----- */
-// =============================
-
-// == CUSTOM TESTBENCH CLASS ==
-/* -----\/----- EXCLUDED -----\/-----
-`include "~/Documents/GitHub/RTL_Testbench/sourceslib_tb_uart/tb_uart_class.sv"
-`include "~/Documents/GitHub/RTL_Testbench/sourceslib_tb_data_collector/tb_data_collector_class.sv"
-`include "~/Documents/GitHub/RTL_Testbench/sourceslib_tb_data_checker/tb_data_checker_class.sv"
-`include "~/Documents/GitHub/RTL_Testbench/sourceslib_tb_axi4/tb_master_axi4lite_class.sv"
- -----/\----- EXCLUDED -----/\----- */
-// ============================
 
 class tb_modules_custom_class #(// == SET INJECTOR PARAMETERS ==
 				parameter G_SET_SIZE  = 5,
@@ -329,8 +311,6 @@ class tb_modules_custom_class #(// == SET INJECTOR PARAMETERS ==
 	    if(this.tb_modules_infos[i].cmd_type == cmd_type) begin
 	       cmd_type_already_exists = 1; // Command Already Exists
 	       cmd_type_index          = i; // Save the index
-	       //$display("DEBUG - tb_modules_custom_class : Command Type already exists - index : %d !", cmd_type_index);
-	       
 	    end
 	 end
       end
@@ -346,9 +326,7 @@ class tb_modules_custom_class #(// == SET INJECTOR PARAMETERS ==
 
       // If cmd_type doesnt exists, add it to array of struct
       if(cmd_type_already_exists == 0) begin
-	 /*$display("cmd_type_already_exists == 0");	
-	 $display("cmd_type : %s - tb_module_cmd_list : %p", cmd_type, tb_module_cmd_list);
-	 */
+
 	 // Add Command type
 	 this.tb_modules_infos[this.tb_infos_ptr].cmd_type = cmd_type;
 	 
@@ -362,15 +340,9 @@ class tb_modules_custom_class #(// == SET INJECTOR PARAMETERS ==
 	 // Add info of regular cmd
 	 this.tb_modules_infos[this.tb_infos_ptr].is_regular_cmd = is_regular;
 	 
-	 /*$display("this.tb_modules_infos[this.tb_infos_ptr].cmd_type : %s", this.tb_modules_infos[this.tb_infos_ptr].cmd_type);
-	 $display("this.tb_modules_infos[this.tb_infos_ptr].alias_list : %p", this.tb_modules_infos[this.tb_infos_ptr].alias_list);
-	 $display("this.tb_modules_infos[this.tb_infos_ptr].is_regular_cmd : %d", this.tb_modules_infos[this.tb_infos_ptr].is_regular_cmd);
-	 */
+
 	 this.tb_infos_ptr += 1; // Inc Pointer	
-	 //$display("this.tb_infos_ptr : %d\n", this.tb_infos_ptr);
-	 
-	 
-//  
+
       end // if (cmd_type_already_exists == 0)
       // If cmd_already exists - Check if Alias is not already in the list, if not add it to struct
       else begin
@@ -695,11 +667,19 @@ class tb_modules_custom_class #(// == SET INJECTOR PARAMETERS ==
 															   i_cmd_args);
 	       end
 
-	       //Check if Command are "MASTER_AXI4LITE" Types
+	       // Check if Command are "MASTER_AXI4LITE" Types
 	       else if (this.tb_modules_infos[i].cmd_type == "MASTER_AXI4LITE" && i_cmd_type == "MASTER_AXI4LITE") begin
 		  this.tb_master_axi4lite_inst[this.tb_modules_infos[i].alias_list[i_alias_str]].sel_axi4_command(i_cmd, 
 														  i_alias_str, 
 														  i_cmd_args);
+
+	       end
+
+	       // Check if Command are "I2C_SLAVE" Types
+	       else if (this.tb_modules_infos[i].cmd_type == "I2C_SLAVE" && i_cmd_type == "I2C_SLAVE") begin
+		  this.tb_i2c_slave_inst[this.tb_modules_infos[i].alias_list[i_alias_str]].sel_i2c_slave_command(i_cmd, 
+														 i_alias_str, 
+														 i_cmd_args);
 
 	       end
 	       // TBD !!! DATA_CHECKER !!!!!

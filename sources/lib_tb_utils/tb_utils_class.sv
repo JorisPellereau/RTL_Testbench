@@ -99,30 +99,40 @@ class tb_utils_class;
 //      $display("space_positions : %p", space_positions);
 
       args_nb = space_positions.size() + 1; // Number of space position + 1
-      
-      for(i = 0 ; i < args_nb ; i++) begin
+      $display("DEBUG - str_2_args : args_nb : %d", args_nb);
 
-	 // Case 1st args
-	 if(args.size() == 0) begin
-	    args    = new [1];                              // Create Array
-	    args[0] = str.substr(0, space_positions[i] - 1); // Get 1st ARGS	    
-	 end
-	 else begin
+      // Loop only if there are more than 1 args
+      if(args_nb > 1) begin
+	 for(i = 0 ; i < args_nb ; i++) begin
 
-	    // Case last space position => End of STR
-	    if(i == args_nb - 1)  begin
-	       args                  = new [args.size() + 1] (args); // Add 1 element
-	       args[args.size() - 1] = str.substr(space_positions[i-1] + 1, str_len - 1);
-	       
+	    // Case 1st args
+	    if(args.size() == 0) begin
+	       args    = new [1];                              // Create Array
+	       args[0] = str.substr(0, space_positions[i] - 1); // Get 1st ARGS	    
 	    end
-	    // Case between 2 space position, not at the beginning nor the end of str
 	    else begin
-	       args                  = new [args.size() + 1] (args); // Add 1 element
-	       args[args.size() - 1] = str.substr(space_positions[i-1] + 1, space_positions[i] - 1);	       
+	       
+	       // Case last space position => End of STR
+	       if(i == args_nb - 1)  begin
+		  args                  = new [args.size() + 1] (args); // Add 1 element
+		  args[args.size() - 1] = str.substr(space_positions[i-1] + 1, str_len - 1);
+		  
+	       end
+	       // Case between 2 space position, not at the beginning nor the end of str
+	       else begin
+		  args                  = new [args.size() + 1] (args); // Add 1 element
+		  args[args.size() - 1] = str.substr(space_positions[i-1] + 1, space_positions[i] - 1);	       
+	       end
 	    end
-	 end
-      end // for (i = 0 ; i < space_positions.size() ; i++)
+	 end // for (i = 0 ; i < space_positions.size() ; i++)
+      end // if (args_nb > 1)
 
+      // args get str
+      else begin
+	 args    = new [1];                              // Create Array
+	 args[0] = str;	 
+      end
+      
       return args;      
       
    endfunction // str_2_args

@@ -10,7 +10,7 @@ class tb_i2c_slave_class #(
     * ===============
     */
 
-   string SLAVE_I2C_COMMAND_TYPE = "SLAVE_I2C"; // Commande Type   
+   string SLAVE_I2C_COMMAND_TYPE = "I2C_SLAVE"; // Commande Type   
    string SLAVE_I2C_ALIAS;                      // Alias of Current I2C Slave Testbench Module
 
    // == UTILS ==
@@ -106,7 +106,7 @@ class tb_i2c_slave_class #(
 	 addr   = this.utils.str_2_int(args[0]); // Convert the string into a int
 
 	 this.i2c_slave_vif.i2c_slave_addr = addr; // Set the addr	 	   	 
-	 $display("DEBUG - SLAVE_I2C_SET_ADDR  DONE - %t", $time);
+	 $display("DEBUG - SLAVE_I2C_SET_ADDR  DONE - %t - addr : %x - %p", $time, addr, args);
       end
       
    endtask
@@ -132,8 +132,8 @@ class tb_i2c_slave_class #(
 	 
 	 for(i = 0 ; i < args.size() ; i++) begin
 	    data_to_load = this.utils.str_2_int(args[i]);                                   // Convert the string into a int
-	    this.i2c_slave_vif.mem_tx_data[this.i2c_slave_vif.ptr_write_tx] <= data_to_load; // Load the data
-	    this.i2c_slave_vif.ptr_write_tx <= this.i2c_slave_vif.ptr_write_tx + 1;         // Inc the pointer	    
+	    this.i2c_slave_vif.mem_tx_data[this.i2c_slave_vif.ptr_write_tx] = data_to_load; // Load the data
+	    this.i2c_slave_vif.ptr_write_tx = this.i2c_slave_vif.ptr_write_tx + 1;         // Inc the pointer	    
 	 end
 
 	 $display("DEBUG - SLAVE_I2C_LOAD_TX_DATA  DONE - %t", $time);
@@ -169,12 +169,12 @@ class tb_i2c_slave_class #(
 	    
 	    // Check if the data is equal to the data in the RX Memory
 	    if(data_to_check == rx_data) begin
-	       $diplay("SLAVE_I2C_CHECK_RX_DATA[%s] - Data expected n°%d : %x == %x => OK", i_i2c_slave_alias, i, data_to_check, rx_data);
+	       $display("SLAVE_I2C_CHECK_RX_DATA[%s] - Data expected n°%d : %x == %x => OK", i_i2c_slave_alias, i, data_to_check, rx_data);
 	    end
 
 	    // Otherwise display an error
 	    else begin
-       	       $diplay("SLAVE_I2C_CHECK_RX_DATA[%s] - Data expected n°%d : %x != %x => ERROR", i_i2c_slave_alias, i, data_to_check, rx_data);
+       	       $display("SLAVE_I2C_CHECK_RX_DATA[%s] - Data expected n°%d : %x != %x => ERROR", i_i2c_slave_alias, i, data_to_check, rx_data);
 	    end
 	    this.i2c_slave_vif.ptr_read_rx <= this.i2c_slave_vif.ptr_read_rx + 1; // Inc. the ptr	    
 	    	    

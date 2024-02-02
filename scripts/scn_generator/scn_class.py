@@ -8,6 +8,7 @@
 #          - 27/11/2021 - Modif. class in order to inherites from Commands class
 #          - 26/04/2023 - Add commentary for sphinx documentation
 #          - 13/12/2023 - Add tb_axi4_cmd_class
+#          - 02/02/2024 - Add tb_i2c_cmd_class
 
 import sys
 import os
@@ -19,13 +20,15 @@ import tb_uart_cmd_class
 import tb_data_collector_cmd_class
 import tb_data_checker_cmd_class
 import tb_axi4_cmd_class
+import tb_i2c_cmd_class
 
 # Extends of generic_tb_cmd_class
 class scn_class(generic_tb_cmd_class.generic_tb_cmd_class,
                 tb_uart_cmd_class.tb_uart_cmd_class,
                 tb_data_collector_cmd_class.tb_data_collector_cmd_class,
                 tb_data_checker_cmd_class.tb_data_checker_cmd_class,
-                tb_axi4_cmd_class.tb_axi4_cmd_class
+                tb_axi4_cmd_class.tb_axi4_cmd_class,
+                tb_i2c_cmd_class.tb_i2c_cmd_class
                 ):
 
     """
