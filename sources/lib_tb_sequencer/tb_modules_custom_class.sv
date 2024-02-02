@@ -59,7 +59,10 @@ class tb_modules_custom_class #(// == SET INJECTOR PARAMETERS ==
 				// == MASTER AXI4LITE PARAMETERS ==
 				parameter G_NB_MASTER_AXI4LITE  = 2,
 				parameter G_AXI4LITE_ADDR_WIDTH = 32,
-				parameter G_AXI4LITE_DATA_WIDTH = 32
+				parameter G_AXI4LITE_DATA_WIDTH = 32,
+
+				// == SLAVE I2C PARAMETERS ==
+				parameter G_SLAVE_I2C_FIFO_WIDTH = 256
 				);
    
 
@@ -253,9 +256,28 @@ class tb_modules_custom_class #(// == SET INJECTOR PARAMETERS ==
       this.master_axi4lite_vif_ptr += 1; // Inc. Pointer
             
    endfunction // init_master_axi4lite_custom_class
-   
-   
    // =====================================
+
+   // == SLAVE I2C TESTBENCH CLASS ==
+   tb_i2c_slave_class #(
+			.G_SLAVE_I2C_FIFO_WIDTH (G_SLAVE_I2C_FIFO_WIDTH)
+			)
+   tb_i2c_slave_inst [*];
+   int 							  i2c_slave_vif_ptr = 0; // Pointer for I2C Slave Instances
+
+   // INIT SLAVE I2C TESTBENCH CLASS and Add Info
+   function void init_slave_i2c_custom_class(virtual i2c_slave_intf #(G_SLAVE_I2C_FIFO_WIDTH)  slave_i2c_nif,
+					     string SLAVE_I2C_ALIAS
+					     );
+      
+      this.tb_i2c_slave_inst[this.i2c_slave_vif_ptr] = new(slave_i2c_nif, SLAVE_I2C_ALIAS);
+      ADD_INFO(this.tb_i2c_slave_inst[this.i2c_slave_vif_ptr].SLAVE_I2C_COMMAND_TYPE,
+	       this.tb_i2c_slave_inst[this.i2c_slave_vif_ptr].SLAVE_I2C_CMD_ARRAY,
+	       this.tb_i2c_slave_inst[this.i2c_slave_vif_ptr].SLAVE_I2C_ALIAS);
+      this.i2c_slave_vif_ptr += 1; // Inc. Pointer
+            
+   endfunction // init_slave_i2c_custom_class   
+   // ===============================
    
    
    /* =================
