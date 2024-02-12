@@ -1,7 +1,7 @@
 import pkg_tb::*;
 
 class tb_i2c_slave_class #(
-			   parameter G_SLAVE_I2C_FIFO_WIDTH = 32
+			   parameter G_SLAVE_I2C_FIFO_DEPTH = 32
 			   );
 
 
@@ -20,12 +20,12 @@ class tb_i2c_slave_class #(
    
    // == VIRTUAL I/F ==
    // I2C Slave interface
-   virtual i2c_slave_intf #(G_SLAVE_I2C_FIFO_WIDTH) i2c_slave_vif;
+   virtual i2c_slave_intf #(G_SLAVE_I2C_FIFO_DEPTH) i2c_slave_vif;
    // =================
 
 
    // == CONSTRUCTOR ==
-   function new(virtual i2c_slave_intf #(G_SLAVE_I2C_FIFO_WIDTH) i2c_slave_nif,
+   function new(virtual i2c_slave_intf #(G_SLAVE_I2C_FIFO_DEPTH) i2c_slave_nif,
 		string SLAVE_I2C_ALIAS);
       this.i2c_slave_vif   = i2c_slave_nif;
       this.SLAVE_I2C_ALIAS = SLAVE_I2C_ALIAS;      

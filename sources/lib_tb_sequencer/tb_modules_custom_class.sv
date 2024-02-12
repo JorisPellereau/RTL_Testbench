@@ -44,7 +44,7 @@ class tb_modules_custom_class #(// == SET INJECTOR PARAMETERS ==
 				parameter G_AXI4LITE_DATA_WIDTH = 32,
 
 				// == SLAVE I2C PARAMETERS ==
-				parameter G_SLAVE_I2C_FIFO_WIDTH = 256
+				parameter G_SLAVE_I2C_FIFO_DEPTH = 256
 				);
    
 
@@ -242,13 +242,13 @@ class tb_modules_custom_class #(// == SET INJECTOR PARAMETERS ==
 
    // == SLAVE I2C TESTBENCH CLASS ==
    tb_i2c_slave_class #(
-			.G_SLAVE_I2C_FIFO_WIDTH (G_SLAVE_I2C_FIFO_WIDTH)
+			.G_SLAVE_I2C_FIFO_DEPTH (G_SLAVE_I2C_FIFO_DEPTH)
 			)
    tb_i2c_slave_inst [*];
    int 							  i2c_slave_vif_ptr = 0; // Pointer for I2C Slave Instances
 
    // INIT SLAVE I2C TESTBENCH CLASS and Add Info
-   function void init_slave_i2c_custom_class(virtual i2c_slave_intf #(G_SLAVE_I2C_FIFO_WIDTH)  slave_i2c_nif,
+   function void init_slave_i2c_custom_class(virtual i2c_slave_intf #(G_SLAVE_I2C_FIFO_DEPTH)  slave_i2c_nif,
 					     string SLAVE_I2C_ALIAS
 					     );
       
