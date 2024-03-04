@@ -59,8 +59,8 @@ class tb_i2c_cmd_class:
         self.scn_line_list.append(line_to_print)
 
 
-    # I2C SLACE CHECK_RX_DATA
-    def I2C_SLAVE_CHECK_RX_MEMORY(self, alias, data):
+    # I2C SLAVE CHECK_RX_DATA
+    def I2C_SLAVE_CHECK_RX_DATA(self, alias, data):
         """
         Add the the self.scn_line_list variable the command for the utilization of the I2C_SLAVE CHECK_RX_DATA testbench command.
 
@@ -74,7 +74,7 @@ class tb_i2c_cmd_class:
         if(type(data) == list):
             for i in range(0, len(data) - 1):
                 line_to_print = line_to_print + str(data[i]) + " "
-                line_to_print = line_to_print + str(data_list[len(data_list) - 1])
+            line_to_print = line_to_print + str(data[len(data) - 1])
         elif(type(data) == int):
             line_to_print = str(data)
         

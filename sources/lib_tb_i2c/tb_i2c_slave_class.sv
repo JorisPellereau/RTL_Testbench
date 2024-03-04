@@ -169,14 +169,14 @@ class tb_i2c_slave_class #(
 	    
 	    // Check if the data is equal to the data in the RX Memory
 	    if(data_to_check == rx_data) begin
-	       $display("SLAVE_I2C_CHECK_RX_DATA[%s] - Data expected n°%d : %x == %x => OK", i_i2c_slave_alias, i, data_to_check, rx_data);
+	       $display("SLAVE_I2C_CHECK_RX_DATA[%s] - Data expected n(%d) : %x == %x => OK", i_i2c_slave_alias, i, data_to_check, rx_data);
 	    end
 
 	    // Otherwise display an error
 	    else begin
-       	       $display("SLAVE_I2C_CHECK_RX_DATA[%s] - Data expected n°%d : %x != %x => ERROR", i_i2c_slave_alias, i, data_to_check, rx_data);
+       	       $display("Error: SLAVE_I2C_CHECK_RX_DATA[%s] - Data expected n(%d) : %x != %x => ERROR", i_i2c_slave_alias, i, data_to_check, rx_data);
 	    end
-	    this.i2c_slave_vif.ptr_read_rx <= this.i2c_slave_vif.ptr_read_rx + 1; // Inc. the ptr	    
+	    this.i2c_slave_vif.ptr_read_rx = this.i2c_slave_vif.ptr_read_rx + 1; // Inc. the ptr	    
 	    	    
 	 end
 

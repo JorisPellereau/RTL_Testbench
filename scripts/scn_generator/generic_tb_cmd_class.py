@@ -39,8 +39,8 @@ class generic_tb_cmd_class:
 
         :param alias: Alias of the SET command
         :param data:  Data of the SET command
-        :param type alias: str
-        :param data: int
+        :type alias: str
+        :type data: int
         """
         line_to_print = "SET[{0}] ({1})".format(alias, hex(data))# + alias + " " + hex(data) + "\n"
         self.scn_line_list.append(line_to_print) # Add Line to List
@@ -55,9 +55,9 @@ class generic_tb_cmd_class:
         :param alias: Alias of the SET command
         :param timeout: The timeout of the WTR command
         :param unity: Unity of the timeout
-        :param type alias: str
-        :param timeout: int
-        :param unity: str - "ns" - "us" - "ms"
+        :type alias: str
+        :type timeout: int
+        :type unity: str - "ns" - "us" - "ms"
         """
         if(timeout == 'none' and unity == 'none'):            
             line_to_print = "WTR[{0}]".format(alias)# + alias + "\n"
@@ -77,9 +77,9 @@ class generic_tb_cmd_class:
         :param alias: Alias of the SET command
         :param timeout: The timeout of the WTR command
         :param unity: Unity of the timeout
-        :param type alias: str
-        :param timeout: int
-        :param unity: str - "ns" - "us" - "ms"
+        :type alias: str
+        :type timeout: int
+        :type unity: str - "ns" - "us" - "ms"
         """
         if(timeout == 'none' and unity == 'none'):            
             line_to_print = "WTF[{0}]".format(alias)# + alias + "\n"
@@ -99,9 +99,9 @@ class generic_tb_cmd_class:
         :param alias: Alias of the SET command
         :param timeout: The timeout of the WTR command
         :param unity: Unity of the timeout
-        :param type alias: str
-        :param timeout: int
-        :param unity: str - "ns" - "us" - "ms"
+        :type alias: str
+        :type timeout: int
+        :type unity: str - "ns" - "us" - "ms"
         """
         if(timeout == 'none' and unity == 'none'):            
             line_to_print = "WTRS[{0}]".format(alias)# + alias + "\n"
@@ -121,9 +121,9 @@ class generic_tb_cmd_class:
         :param alias: Alias of the SET command
         :param timeout: The timeout of the WTR command
         :param unity: Unity of the timeout
-        :param type alias: str
-        :param timeout: int
-        :param unity: str - "ns" - "us" - "ms"
+        :type alias: str
+        :type timeout: int
+        :type unity: str - "ns" - "us" - "ms"
         """
         if(timeout == 'none' and unity == 'none'):            
             line_to_print = "WTFS[{0}]".format(alias)# + alias + "\n"
@@ -142,9 +142,9 @@ class generic_tb_cmd_class:
         :param alias: Alias of the CHK command
         :param data: Expected data to check
         :param test: Expected test
-        :param type alias: str
-        :param data: int
-        :param test: str - "OK" - "ERROR"
+        :type alias: str
+        :type data: int
+        :type test: str - "OK" - "ERROR"
         """
         line_to_print = "CHK[{0}] ({1} {2})".format(alias, hex(data), test)# + "] (" + hex(data) + " " + test + ")\n"
         self.scn_line_list.append(line_to_print)
@@ -158,8 +158,8 @@ class generic_tb_cmd_class:
 
         :param duree: Duration of the Wait
         :param unity: Unity of the wait duration
-        :param type alias: str
-        :param unity: str : "ps" - "ns" - "us" - "ms"
+        :type alias: str
+        :type unity: str : "ps" - "ns" - "us" - "ms"
         """
         line_to_print = "WAIT[] ({0} {1})".format(str(duree), unity)# + str(duree) + " " + unity + "\n"
         self.scn_line_list.append(line_to_print)
@@ -319,3 +319,58 @@ class generic_tb_cmd_class:
         # Create the file
         with open(mem_file, "w") as file_w:
             file_w.writelines(mem_final_str)
+
+
+    # Load data on a bus. Drive a valid signal and a bus data. One data per clock period
+    def LOAD_BUS(self, alias_val, alias_data, alias_clk, data_list, timeout = 'none',unity = 'none'):
+        """
+        Append to the list self.scn_line_list the lines that permits to load data onto a bus.
+        A valid signal is set to '1' for the 
+
+        :param alias_val:  Alias of the VALID signal to control
+        :param alias_data: Alias of the DATA signal to control
+        :param alias_clk:  Alias of the CLK signal to use for the synchronization
+        :param data_list:  Data list to set on the bus
+        :param timeout:    Timeout value of the WTFS command
+        :param unity:      Unity of the timeout
+        :type alias_val:   str
+        :type alias_data:  str
+        :type alias_clk:   str
+        :type data_list:   list[int]
+        :type timeout:     int
+        :type unity:       str
+        """
+
+        # Check if the type is a list
+        if(type(data_list) == list):
+            
+            for i in range(0, len(data_list)):
+                # Wait for a falling edge of the synchronization clock
+                self.WTFS(alias   = alias_clk,
+                          timeout = timeout,
+                          unity   = unity)
+
+                # Set the data on the bus
+                self.SET(alias = alias_data,
+                         data  = data_list[i])
+
+                # Set the valid of the bus to '1'
+                self.SET(alias = alias_val,
+                         data  = 1)
+
+            # Wait for a falling edge of the synchronization clock
+            self.WTFS(alias   = alias_clk,
+                      timeout = timeout,
+                      unity   = unity)
+
+            # Set 0 on the bus
+            self.SET(alias = alias_data,
+                     data  = 0)
+
+            # Set the valid of the bus to '0'
+            self.SET(alias = alias_val,
+                     data  = 0)
+      
+        else:
+            raise NameError("LOAD_BUS - type(data_list) /= list")
+        
