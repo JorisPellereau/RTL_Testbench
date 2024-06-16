@@ -1,17 +1,20 @@
 /*
-I2C Slave Instanciation 
+I2C Slave verification block
  
  
 */
 module i2c_slave #(
 		   parameter G_SLAVE_I2C_FIFO_DEPTH = 256,
-		   parameter G_NB_DATA              = 256
+		   parameter G_NB_DATA              = 256,
+		   parameter G_MAX_POLLING          = 10
 		   )
    (
-    input 			  rst_n, // Testbench Module Reset - LOW Level activation
-    input [$clog2(G_NB_DATA) : 0] nb_data,
-    inout 			  sclk,
-    inout 			  sda
+    input 			      rst_n, // Testbench Module Reset - LOW Level activation
+    input [$clog2(G_NB_DATA) : 0]     nb_data,
+    input 			      polling, // Polling during access
+    input [$clog2(G_MAX_POLLING) : 0] max_polling,
+    inout 			      sclk,
+    inout 			      sda
     );
    
    
